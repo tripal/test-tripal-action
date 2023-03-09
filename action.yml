@@ -1,0 +1,13 @@
+# action.yml
+name: 'Test Tripal Action'
+description: 'Run automated testing for a Tripal extension module.'
+inputs:
+  image-tag:
+    description: 'The image tag of the tripal docker you want to run tests in.'
+    required: true
+    default: 'drupal9.5.x-dev-php8.1-pgsql13'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    - IMAGETAG: ${{ inputs.image-tag }}

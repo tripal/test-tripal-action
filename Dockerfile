@@ -1,0 +1,1 @@
+FROM tripalproject/tripaldocker:$IMAGETAG
