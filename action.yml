@@ -10,4 +10,4 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
-    - IMAGETAG: ${{ inputs.image-tag }}
+    IMAGETAG: ${{ inputs.image-tag }}
