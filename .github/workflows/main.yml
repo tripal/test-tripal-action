@@ -11,8 +11,10 @@ jobs:
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/tripal/tripal.git tmp
-          mv tmp/* ./
-          ls ./
+          cd tmp
+          git checkout 4.x
+          mv * ../
+          ls ../
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
         with:
