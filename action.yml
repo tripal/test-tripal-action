@@ -24,9 +24,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-      # Check out the repo
-      - name: Checkout Repository
-        uses: actions/checkout@v2
       # Here we pull the development tripaldocker image for this combo
       - name: Pull TripalDocker Image
         shell: bash
