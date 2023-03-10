@@ -5,11 +5,37 @@ This repo provides a Github Action to make automated testing workflows for Tripa
 
 ## Example usage
 
+The following example for a module named `my_tripal_extension` uses this action in a matrix to automate testing across multiple php and drupal versions.
+
 ```yml
-uses: tripal/test-tripal-action@v1
-with:
-  directory-name: mypackage
-  modules-to-install: 'module1 module2'  
+name: PHPUnit
+on: [push]
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "8.0"
+          - "8.1"
+        pgsql-version:
+          - "13"
+        drupal-version:
+          - "9.3.x-dev"
+          - "9.4.x-dev"
+          - "9.5.x-dev"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Run Automated testing
+        uses: tripal/test-tripal-action@v1.0
+        with:
+          directory-name: my_tripal_extension
+          modules: my_tripal_extension
+          php-version: ${{ matrix.php-version }}
+          pgsql-version: ${{ matrix.pgsql-version }}
+          drupal-version: ${{ matrix.drupal-version }}
 ```
 
 ## Inputs
