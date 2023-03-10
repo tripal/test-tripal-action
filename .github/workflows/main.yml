@@ -10,8 +10,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Clone Tripal for testing purposes
         run: |
-          git clone https://github.com/tripal/tripal.git tripal
-          mv tripal/* ./
+          git clone https://github.com/tripal/tripal.git tmp
+          mv tmp/* ./
           ls ./
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
