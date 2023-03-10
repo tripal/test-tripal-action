@@ -2,12 +2,64 @@
 name: 'Test Tripal Action'
 description: 'Run automated testing for a Tripal extension module.'
 inputs:
-  image-tag:
-    description: 'The image tag of the tripal docker you want to run tests in.'
-    required: true
-    default: 'drupal9.5.x-dev-php8.1-pgsql13'
+  package-name: 
+    description: ""
+    required: false
+    default: 'trpextension'
+  modules: 
+    description: ""
+    required: false
+  php-version:
+    description: ""
+    required: false
+    default: '8.1'
+  pgsql-version:
+    description: ""
+    required: false
+    default: '13'
+  drupal-version: 
+    description: ""
+    required: false
+    default: '9.5.x-dev'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  env:
-    IMAGETAG: ${{ inputs.image-tag }}
+  using: "composite"
+  steps:
+      # Here we pull the development tripaldocker image for this combo
+      - name: Pull TripalDocker Image
+        shell: bash
+        env:
+          IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
+        run: |
+          docker pull tripalproject/tripaldocker:$IMAGE_TAG
+      # Just spin up docker the good ol' fashion way
+      # mounting our currently checked out package inside the docker container.
+      - name: Spin up Docker locally
+        shell: bash
+        env:
+          IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
+        run: |
+          docker run --publish=80:80 --name=tripaldocker -tid \
+            --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.package-name }} tripalproject/tripaldocker:$IMAGE_TAG
+          docker exec tripaldocker service postgresql restart
+          docker exec tripaldocker drush trp-install-chado --schema-name='testchado' --version=1.3
+      # Install the modules
+      - name: Install our package in Docker
+        if: "${{ inputs.modules != '' }}"
+        shell: bash
+        run: |
+          docker exec tripaldocker service postgresql restart
+          docker exec tripaldocker drush en ${{ inputs.modules }} --yes
+      # Runs the PHPUnit tests.
+      - name: Run PHPUnit Tests
+        shell: bash
+        env:
+          SIMPLETEST_BASE_URL: "http://localhost"
+          SIMPLETEST_DB: "pgsql://drupaladmin:drupal9developmentonlylocal@localhost/sitedb"
+          BROWSER_OUTPUT_DIRECTORY: "/var/www/drupal9/web/sites/default/files/simpletest"
+        run: |
+          docker exec tripaldocker service postgresql restart
+          docker exec -e SIMPLETEST_BASE_URL=$SIMPLETEST_BASE_URL \
+            -e SIMPLETEST_DB=$SIMPLETEST_DB \
+            -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
+            --workdir=/var/www/drupal9/web/modules/contrib/${{ inputs.package-name }} \
+            tripaldocker phpunit
