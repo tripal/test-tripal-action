@@ -2,6 +2,16 @@
 
 This repo provides a Github Action to make automated testing workflows for Tripal Extension modules easy! It will spin up a specialized docker container, install your module with it's dependencies.
 
+
+## Example usage
+
+```yml
+uses: tripal/test-tripal-action@v1
+with:
+  directory-name: mypackage
+  modules-to-install: 'module1 module2'  
+```
+
 ## Inputs
 
 ### `directory-name`
@@ -44,15 +54,6 @@ For a full listing of options for the PHPUnit [see the docs](https://docs.phpuni
 ## Outputs
 
 *None yet implemented.*
-
-## Example usage
-
-```yml
-uses: actions/test-tripal-action@v1
-with:
-  directory-name: mymodule
-  modules-to-install: 'dependency1 dependency2 mymodule'
-```
 
 ## Future Development
 
