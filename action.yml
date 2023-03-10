@@ -43,8 +43,6 @@ runs:
         run: |
           docker run --publish=80:80 --name=tripaldocker -tid \
             --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} tripalproject/tripaldocker:$IMAGE_TAG
-          docker exec tripaldocker service postgresql restart
-          docker exec tripaldocker drush trp-install-chado --schema-name='testchado' --version=1.3
       # Install the modules
       - name: Install our package in Docker
         if: "${{ inputs.modules != '' }}"
@@ -65,5 +63,4 @@ runs:
             -e SIMPLETEST_DB=$SIMPLETEST_DB \
             -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
             --workdir=/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} \
-            tripaldocker phpunit
-            ${{ inputs.phpunit-command-options }}
+            tripaldocker phpunit ${{ inputs.phpunit-command-options }}
