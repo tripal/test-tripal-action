@@ -29,6 +29,7 @@ runs:
         uses: actions/checkout@v2
       # Here we pull the development tripaldocker image for this combo
       - name: Pull TripalDocker Image
+        shell: bash
         env:
           IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
         run: |
@@ -36,6 +37,7 @@ runs:
       # Just spin up docker the good ol' fashion way
       # mounting our currently checked out package inside the docker container.
       - name: Spin up Docker locally
+        shell: bash
         env:
           IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
         run: |
@@ -44,11 +46,13 @@ runs:
       # Install the modules
       - name: Install our package in Docker
         if: "${{ inputs.modules != '' }}"
+        shell: bash
         run: |
           docker exec tripaldocker service postgresql restart
           docker exec tripaldocker drush en ${{ inputs.modules }} --yes
       # Runs the PHPUnit tests.
       - name: Run PHPUnit Tests
+        shell: bash
         env:
           SIMPLETEST_BASE_URL: "http://localhost"
           SIMPLETEST_DB: "pgsql://drupaladmin:drupal9developmentonlylocal@localhost/sitedb"
