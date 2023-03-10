@@ -2,23 +2,22 @@
 name: 'Test Tripal Action'
 description: 'Run automated testing for a Tripal extension module.'
 inputs:
-  package-name: 
-    description: ""
-    required: false
-    default: 'trpextension'
-  modules: 
-    description: ""
-    required: false
+  directory-name:
+    description: "The name of the directory your Tripal module or package was checked out into."
+    required: true
+  modules:
+    description: "A space-separated list of module machine names indicating which modules to install before running tests."
+    required: true
   php-version:
-    description: ""
+    description: "The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.0 and 8.1)."
     required: false
     default: '8.1'
   pgsql-version:
-    description: ""
+    description: "The version of PostgreSQL you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 13)."
     required: false
     default: '13'
-  drupal-version: 
-    description: ""
+  drupal-version:
+    description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 9.4.x-dev, 9.5.x-dev)."
     required: false
     default: '9.5.x-dev'
 runs:
@@ -39,7 +38,7 @@ runs:
           IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
         run: |
           docker run --publish=80:80 --name=tripaldocker -tid \
-            --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.package-name }} tripalproject/tripaldocker:$IMAGE_TAG
+            --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} tripalproject/tripaldocker:$IMAGE_TAG
           docker exec tripaldocker service postgresql restart
           docker exec tripaldocker drush trp-install-chado --schema-name='testchado' --version=1.3
       # Install the modules
@@ -61,5 +60,5 @@ runs:
           docker exec -e SIMPLETEST_BASE_URL=$SIMPLETEST_BASE_URL \
             -e SIMPLETEST_DB=$SIMPLETEST_DB \
             -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
-            --workdir=/var/www/drupal9/web/modules/contrib/${{ inputs.package-name }} \
+            --workdir=/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit
