@@ -20,3 +20,4 @@ jobs:
         with:
           directory-name: tripal
           modules: tripal
+          phpunit-command-options: '--testsuite tripal'

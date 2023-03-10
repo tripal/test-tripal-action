@@ -20,6 +20,10 @@ inputs:
     description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 9.4.x-dev, 9.5.x-dev)."
     required: false
     default: '9.5.x-dev'
+  phpunit-command-options:
+    description: "A string providing any options you would like added to the phpunit command."
+    required: false
+    default: ' '
 runs:
   using: "composite"
   steps:
@@ -62,3 +66,4 @@ runs:
             -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
             --workdir=/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit
+            ${{ inputs.phpunit-command-options }}
