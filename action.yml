@@ -39,7 +39,7 @@ runs:
           IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
         run: |
           docker run --publish=80:80 --name=tripaldocker -tid \
-            --volume=`pwd`:/var/www/drupal9/web/modules/${{ inputs.package-name }} tripalproject/tripaldocker:$IMAGE_TAG
+            --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.package-name }} tripalproject/tripaldocker:$IMAGE_TAG
       # Install the modules
       - name: Install our package in Docker
         if: "${{ inputs.modules != '' }}"
