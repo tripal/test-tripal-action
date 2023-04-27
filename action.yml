@@ -24,6 +24,9 @@ inputs:
     description: "A string providing any options you would like added to the phpunit command."
     required: false
     default: ' '
+  preinstall-script:
+    description: "A path relative to the root of this repository that supplies a bash script to be run before module installation. This should be used to download and install and pre-requisites for your module."
+    required: false
 runs:
   using: "composite"
   steps:
