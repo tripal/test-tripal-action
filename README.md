@@ -77,6 +77,10 @@ A string to be appended to the end of the PHPUnit command. See the following exa
 
 For a full listing of options for the PHPUnit [see the docs](https://docs.phpunit.de/en/9.6/textui.html).
 
+### `preinstall-script`
+
+A Bash script which should be executed withing the Tripal Docker container before your module is installed. This is meant to provide a way to install module pre-requisites. Please provide the path to the script relative to the root of your repository (e.g. `.github/workflows/preinstall.sh`).
+
 ## Outputs
 
 *None yet implemented.*
