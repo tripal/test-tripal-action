@@ -2,7 +2,7 @@ on: [push]
 
 jobs:
   test_all_defaults:
-    name: "Tests running with all defaults"
+    name: "Run using all defaults"
     runs-on: ubuntu-latest
     steps:
       # To use this repository's private action,
@@ -23,7 +23,7 @@ jobs:
           modules: tripal
           phpunit-command-options: '--filter testTripalAdminPages'
   test_all_provided:
-    name: "Tests running with all inputs provided"
+    name: "Run providing all inputs"
     runs-on: ubuntu-latest
     steps:
       # To use this repository's private action,
