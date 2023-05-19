@@ -77,6 +77,20 @@ A string to be appended to the end of the PHPUnit command. See the following exa
 
 For a full listing of options for the PHPUnit [see the docs](https://docs.phpunit.de/en/9.6/textui.html).
 
+### `build-image`
+
+Indicates whether you would like to build the docker based on your code (true) or pull an existing image (false).
+
+**Default Value:** false
+
+### `dockerfile`
+
+The path and file name for the dockerfile (relative to the root of your checkedout module code) to use with the build-image. If build-image is false, then this option will simply be ignored.
+
+Additionally, there is a backup clause for use with the Tripal core repository that will use the other options to choose a docker image at tripaldocker/ and provide the options needed for core. This will only be triggered if the value passed to this option does not exist and the composed tripaldocker dockerfile does.
+
+**Default Value:** Dockerfile
+
 ## Outputs
 
 *None yet implemented.*
