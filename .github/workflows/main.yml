@@ -47,4 +47,30 @@ jobs:
           drupal-version: "10.0.x"
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
-          dockerfile: "tripaldocker/Dockerfile-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
+          dockerfile: "tripaldocker/Dockerfile-php8.1-pgsql13"
+  test_dockfile_tripaldocker:
+    name: "Run Build Tripaldocker"
+    runs-on: ubuntu-latest
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Clone Tripal for testing purposes
+        run: |
+          git clone https://github.com/tripal/tripal.git tmp
+          cd tmp
+          git checkout 4.x
+          mv * ../
+          ls ../
+      - name: Run the action step
+        uses: ./ # Uses an action in the root directory
+        with:
+          directory-name: tripal
+          modules: tripal
+          php-version: "8.1"
+          pgsql-version: "13"
+          drupal-version: "10.0.x"
+          phpunit-command-options: '--filter testTripalAdminPages'
+          build-image: true
+          dockerfile: "UseTripalDockerBackupClause"
