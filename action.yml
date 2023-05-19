@@ -37,7 +37,7 @@ runs:
   steps:
       # Here we pull the development tripaldocker image for this combo
       - name: Pull TripalDocker Image
-        if: ${{ inputs.build-image == false }}
+        if: ${{ inputs.build-image == 'false' }}
         shell: bash
         env:
           IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
@@ -45,7 +45,7 @@ runs:
           docker pull tripalproject/tripaldocker:$IMAGE_TAG
           docker rename tripalproject/tripaldocker:$IMAGE_TAG testing:localdocker
       - name: Build Local Docker Image
-        if: ${{ inputs.build-image == true }}
+        if: ${{ inputs.build-image == 'true' }}
         shell: bash
         run: |
           TRIPALDOCKER="tripaldocker/Dockerfile-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
