@@ -43,7 +43,7 @@ runs:
           IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
         run: |
           docker pull tripalproject/tripaldocker:$IMAGE_TAG
-          docker rename tripalproject/tripaldocker:$IMAGE_TAG testing:localdocker
+          docker image tag tripalproject/tripaldocker:$IMAGE_TAG testing:localdocker
       - name: Build Local Docker Image
         if: ${{ inputs.build-image == 'true' }}
         shell: bash
