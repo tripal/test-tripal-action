@@ -24,25 +24,48 @@ inputs:
     description: "A string providing any options you would like added to the phpunit command."
     required: false
     default: ' '
+  build-image:
+    description: "Indicates whether you would like to build the docker based on your code (true) or pull an existing image (false)."
+    required: true
+    default: false
+  dockerfile:
+    description: "The relative path and file name for the dockerfile to use with build-image."
+    required: true
+    default: 'Dockerfile'
 runs:
   using: "composite"
   steps:
       # Here we pull the development tripaldocker image for this combo
       - name: Pull TripalDocker Image
+        if: "${{ inputs.build-image === false }}"
         shell: bash
         env:
           IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
         run: |
           docker pull tripalproject/tripaldocker:$IMAGE_TAG
+          docker rename tripalproject/tripaldocker:$IMAGE_TAG testing:localdocker
+      - name: Build Local Docker Image
+        if: "${{ inputs.build-image === true }}"
+        shell: bash
+        run: |
+          TRIPALDOCKER="tripaldocker/Dockerfile-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
+          if [ -f "${{ inputs.dockerfile }}" ]; then
+            docker build --tag=testing:localdocker \
+              --build-arg drupalversion="${{ inputs.drupal-version }}" \
+              --build-arg chadoschema='testchado' ./
+          elif [ -f "$TRIPALDOCKER" ]; then
+            docker build --tag=testing:localdocker \
+              --build-arg drupalversion="${{ inputs.drupal-version }}" \
+              --build-arg chadoschema='testchado' ./ \
+              --file $TRIPALDOCKER
+          fi
       # Just spin up docker the good ol' fashion way
       # mounting our currently checked out package inside the docker container.
       - name: Spin up Docker locally
         shell: bash
-        env:
-          IMAGE_TAG: "drupal${{ inputs.drupal-version }}-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
         run: |
           docker run --publish=80:80 --name=tripaldocker -tid \
-            --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} tripalproject/tripaldocker:$IMAGE_TAG
+            --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} testing:localdocker
       # Install the modules
       - name: Install our package in Docker
         if: "${{ inputs.modules != '' }}"
