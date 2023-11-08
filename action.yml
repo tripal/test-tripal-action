@@ -65,7 +65,7 @@ runs:
         shell: bash
         run: |
           docker run --publish=80:80 --name=tripaldocker -tid \
-            --volume=`pwd`:/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} testing:localdocker
+            --volume=`pwd`:/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} testing:localdocker
       # Install the modules
       - name: Install our package in Docker
         if: "${{ inputs.modules != '' }}"
@@ -78,12 +78,12 @@ runs:
         shell: bash
         env:
           SIMPLETEST_BASE_URL: "http://localhost"
-          SIMPLETEST_DB: "pgsql://drupaladmin:drupal9developmentonlylocal@localhost/sitedb"
-          BROWSER_OUTPUT_DIRECTORY: "/var/www/drupal9/web/sites/default/files/simpletest"
+          SIMPLETEST_DB: "pgsql://drupaladmin:drupaldevelopmentonlylocal@localhost/sitedb"
+          BROWSER_OUTPUT_DIRECTORY: "/var/www/drupal/web/sites/default/files/simpletest"
         run: |
           docker exec tripaldocker service postgresql restart
           docker exec -e SIMPLETEST_BASE_URL=$SIMPLETEST_BASE_URL \
             -e SIMPLETEST_DB=$SIMPLETEST_DB \
             -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
-            --workdir=/var/www/drupal9/web/modules/contrib/${{ inputs.directory-name }} \
+            --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit ${{ inputs.phpunit-command-options }}
