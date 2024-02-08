@@ -11,7 +11,7 @@ inputs:
   php-version:
     description: "The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.0 and 8.1)."
     required: false
-    default: '8.1'
+    default: '8.3'
   pgsql-version:
     description: "The version of PostgreSQL you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 13)."
     required: false
@@ -19,7 +19,7 @@ inputs:
   drupal-version:
     description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 9.4.x-dev, 9.5.x-dev)."
     required: false
-    default: '9.5.x-dev'
+    default: '10.2.x-dev'
   phpunit-command-options:
     description: "A string providing any options you would like added to the phpunit command."
     required: false
