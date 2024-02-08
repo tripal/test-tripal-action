@@ -17,19 +17,27 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "8.0"
           - "8.1"
+          - "8.2"
+          - "8.3"
         pgsql-version:
           - "13"
         drupal-version:
-          - "9.3.x-dev"
-          - "9.4.x-dev"
-          - "9.5.x-dev"
+          - "10.0.x-dev"
+          - "10.1.x-dev"
+          - "10.2.x-dev"
+        exclude:
+          - php-version: "8.3"
+            pgsql-version: "13"
+            drupal-version: "10.0.x-dev"
+          - php-version: "8.3"
+            pgsql-version: "13"
+            drupal-version: "10.1.x-dev"
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run Automated testing
-        uses: tripal/test-tripal-action@v1.0
+        uses: tripal/test-tripal-action@v1.3
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
@@ -50,9 +58,9 @@ jobs:
 
 ### `php-version`
 
-**Optional** The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.0 and 8.1).
+**Optional** The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.1, 8.2, 8.3).
 
-**Default Value:** 8.1
+**Default Value:** 8.3
 
 ### `pgsql-version`
 
@@ -62,9 +70,9 @@ The version of PostgreSQL you would like your tests run against. This must match
 
 ### `drupal-version`
 
-The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 9.4.x-dev, 9.5.x-dev).
+The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 10.0.x-dev, 10.1.x-dev, 10.2.x-dev).
 
-**Default Value:** 9.5.x-dev
+**Default Value:** 10.2.x-dev
 
 ### `phpunit-command-options`
 
