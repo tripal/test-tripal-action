@@ -8,7 +8,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/tripal/tripal.git tmp
@@ -29,7 +29,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/tripal/tripal.git tmp
@@ -55,7 +55,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/tripal/tripal.git tmp
