@@ -52,6 +52,7 @@ runs:
           if [ -f "${{ inputs.dockerfile }}" ]; then
             docker build --tag=testing:localdocker \
               --build-arg drupalversion="${{ inputs.drupal-version }}" \
+              --build-arg phpversion="${{ inputs.php-version }}" \
               --build-arg chadoschema='testchado' ./
           elif [ -f "$TRIPALDOCKER" ]; then
             docker build --tag=testing:localdocker \
