@@ -53,11 +53,11 @@ runs:
             docker build --tag=testing:localdocker \
               --build-arg drupalversion="${{ inputs.drupal-version }}" \
               --build-arg phpversion="${{ inputs.php-version }}" \
-              --build-arg chadoschema='testchado' ./
+              --build-arg chadoschema='teacup' ./
           elif [ -f "$TRIPALDOCKER" ]; then
             docker build --tag=testing:localdocker \
               --build-arg drupalversion="${{ inputs.drupal-version }}" \
-              --build-arg chadoschema='testchado' ./ \
+              --build-arg chadoschema='teacup' ./ \
               --file $TRIPALDOCKER
           fi
       # Just spin up docker the good ol' fashion way
