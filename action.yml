@@ -48,7 +48,7 @@ runs:
         if: ${{ inputs.build-image == 'true' }}
         shell: bash
         run: |
-          TRIPALDOCKER="tripaldocker/Dockerfile-php${{ inputs.php-version }}-pgsql${{ inputs.pgsql-version }}"
+          TRIPALDOCKER="tripaldocker/Dockerfile-php${{ inputs.php-version }}"
           if [ -f "${{ inputs.dockerfile }}" ]; then
             docker build --tag=testing:localdocker \
               --build-arg drupalversion="${{ inputs.drupal-version }}" \
@@ -57,6 +57,7 @@ runs:
           elif [ -f "$TRIPALDOCKER" ]; then
             docker build --tag=testing:localdocker \
               --build-arg drupalversion="${{ inputs.drupal-version }}" \
+              --build-arg postgresqlversion="${{ inputs.pgsql-version }}""
               --build-arg chadoschema='teacup' ./ \
               --file $TRIPALDOCKER
           fi
