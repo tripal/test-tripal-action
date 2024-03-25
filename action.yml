@@ -57,7 +57,7 @@ runs:
           elif [ -f "$TRIPALDOCKER" ]; then
             docker build --tag=testing:localdocker \
               --build-arg drupalversion="${{ inputs.drupal-version }}" \
-              --build-arg postgresqlversion="${{ inputs.pgsql-version }}""
+              --build-arg postgresqlversion="${{ inputs.pgsql-version }}" \
               --build-arg chadoschema='teacup' ./ \
               --file $TRIPALDOCKER
           fi
