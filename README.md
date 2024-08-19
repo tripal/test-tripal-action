@@ -22,22 +22,16 @@ jobs:
           - "8.3"
         pgsql-version:
           - "13"
+          - "16"
         drupal-version:
-          - "10.0.x-dev"
-          - "10.1.x-dev"
           - "10.2.x-dev"
-        exclude:
-          - php-version: "8.3"
-            pgsql-version: "13"
-            drupal-version: "10.0.x-dev"
-          - php-version: "8.3"
-            pgsql-version: "13"
-            drupal-version: "10.1.x-dev"
+          - "10.3.x-dev"
+          - "10.4.x-dev"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Automated testing
-        uses: tripal/test-tripal-action@v1.3
+        uses: tripal/test-tripal-action@v1.6
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
