@@ -27,7 +27,7 @@ inputs:
   build-image:
     description: "Indicates whether you would like to build the docker based on your code (true) or pull an existing image (false)."
     required: true
-    default: false
+    default: 'false'
   dockerfile:
     description: "The relative path and file name for the dockerfile to use with build-image."
     required: true
@@ -48,19 +48,11 @@ runs:
         if: ${{ inputs.build-image == 'true' }}
         shell: bash
         run: |
-          TRIPALDOCKER="tripaldocker/Dockerfile-php${{ inputs.php-version }}"
-          if [ -f "${{ inputs.dockerfile }}" ]; then
             docker build --tag=testing:localdocker \
               --build-arg drupalversion="${{ inputs.drupal-version }}" \
               --build-arg phpversion="${{ inputs.php-version }}" \
-              --build-arg chadoschema='teacup' ./
-          elif [ -f "$TRIPALDOCKER" ]; then
-            docker build --tag=testing:localdocker \
-              --build-arg drupalversion="${{ inputs.drupal-version }}" \
               --build-arg postgresqlversion="${{ inputs.pgsql-version }}" \
-              --build-arg chadoschema='teacup' ./ \
-              --file $TRIPALDOCKER
-          fi
+              --build-arg chadoschema='teacup' ./
       # Just spin up docker the good ol' fashion way
       # mounting our currently checked out package inside the docker container.
       - name: Spin up Docker locally
@@ -73,7 +65,6 @@ runs:
         if: "${{ inputs.modules != '' }}"
         shell: bash
         run: |
-          docker exec tripaldocker service postgresql restart
           docker exec tripaldocker drush en ${{ inputs.modules }} --yes
       # Runs the PHPUnit tests.
       - name: Run PHPUnit Tests
@@ -83,7 +74,6 @@ runs:
           SIMPLETEST_DB: "pgsql://drupaladmin:drupaldevelopmentonlylocal@localhost/sitedb"
           BROWSER_OUTPUT_DIRECTORY: "/var/www/drupal/web/sites/default/files/simpletest"
         run: |
-          docker exec tripaldocker service postgresql restart
           docker exec -e SIMPLETEST_BASE_URL=$SIMPLETEST_BASE_URL \
             -e SIMPLETEST_DB=$SIMPLETEST_DB \
             -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
