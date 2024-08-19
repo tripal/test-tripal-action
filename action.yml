@@ -60,7 +60,7 @@ runs:
         run: |
           docker run --publish=80:80 --name=tripaldocker -tid \
             --volume=`pwd`:/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} testing:localdocker
-          pg_isready -h localhost -p 5432 -t 5
+          docker exec tripaldocker pg_isready -h localhost -p 5432 -t 5
       # Install the modules
       - name: Install our package in Docker
         if: "${{ inputs.modules != '' }}"
