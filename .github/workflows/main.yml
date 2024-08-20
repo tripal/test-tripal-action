@@ -48,3 +48,30 @@ jobs:
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
           dockerfile: "Dockerfile"
+  test_codeclimate:
+    name: "Run providing inputs needed for codeclimate coverage reporting"
+    runs-on: ubuntu-latest
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Clone Tripal for testing purposes
+        run: |
+          git clone https://github.com/tripal/tripal.git tmp
+          cd tmp
+          git checkout 4.x
+          mv * ../
+          ls ../
+      - name: Run the action step
+        uses: ./ # Uses an action in the root directory
+        with:
+          directory-name: tripal
+          modules: tripal
+          php-version: "8.3"
+          pgsql-version: "16"
+          drupal-version: "10.4.x-dev"
+          phpunit-command-options: '--filter testTripalAdminPages'
+          build-image: true
+          dockerfile: "Dockerfile"
+          codeclimate-reporter-id: ${{ secrets.CODECLIMATE_TEST_REPORTER_ID }}
