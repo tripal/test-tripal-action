@@ -42,14 +42,14 @@ jobs:
         with:
           directory-name: tripal
           modules: tripal
-          php-version: "8.1"
-          pgsql-version: "13"
-          drupal-version: "10.0.x"
+          php-version: "8.3"
+          pgsql-version: "16"
+          drupal-version: "10.4.x-dev"
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
-          dockerfile: "tripaldocker/Dockerfile-php8.1-pgsql13"
-  test_dockfile_tripaldocker:
-    name: "Run Build Tripaldocker"
+          dockerfile: "Dockerfile"
+  test_codeclimate:
+    name: "Run providing inputs needed for codeclimate coverage reporting"
     runs-on: ubuntu-latest
     steps:
       # To use this repository's private action,
@@ -68,9 +68,10 @@ jobs:
         with:
           directory-name: tripal
           modules: tripal
-          php-version: "8.1"
-          pgsql-version: "13"
-          drupal-version: "10.0.x"
+          php-version: "8.3"
+          pgsql-version: "16"
+          drupal-version: "10.4.x-dev"
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
-          dockerfile: "UseTripalDockerBackupClause"
+          dockerfile: "Dockerfile"
+          codeclimate-reporter-id: ${{ secrets.CODECLIMATE_TEST_REPORTER_ID }}

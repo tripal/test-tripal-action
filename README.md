@@ -5,7 +5,9 @@ This repo provides a Github Action to make automated testing workflows for Tripa
 
 ## Example usage
 
-The following example for a module named `my_tripal_extension` uses this action in a matrix to automate testing across multiple php and drupal versions.
+The following examples for a module named `my_tripal_extension` uses this action in a matrix to automate testing across multiple php and drupal versions.
+
+### Basic Automated Testing
 
 ```yml
 name: PHPUnit
@@ -22,28 +24,54 @@ jobs:
           - "8.3"
         pgsql-version:
           - "13"
+          - "16"
         drupal-version:
-          - "10.0.x-dev"
-          - "10.1.x-dev"
           - "10.2.x-dev"
-        exclude:
-          - php-version: "8.3"
-            pgsql-version: "13"
-            drupal-version: "10.0.x-dev"
-          - php-version: "8.3"
-            pgsql-version: "13"
-            drupal-version: "10.1.x-dev"
+          - "10.3.x-dev"
+          - "10.4.x-dev"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Automated testing
-        uses: tripal/test-tripal-action@v1.3
+        uses: tripal/test-tripal-action@v1.6
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
           php-version: ${{ matrix.php-version }}
           pgsql-version: ${{ matrix.pgsql-version }}
           drupal-version: ${{ matrix.drupal-version }}
+```
+
+### CodeClimate Test Coverage
+
+The following example assumes you have setup PHPUnit to support test coverage reporting and registered your repo with CodeClimate Quality.
+
+Once that is complete, you can find the CodeClimate "Test Reporter ID" by going to Repo Settings > Test Coverage and copying the "Test Reporter ID" on the CodeClimate Quality page for your repo (i.e. https://codeclimate.com/github/[organization]/[repo]).
+
+This CodeClimate "Test Reporter ID" should then be saved as a secret in your repository on Github by going to Settings > Secrets and Variables > Actions on your repos github page (i.e. https://github.com/[organization]/[repo]/settings/secrets/actions) and adding a repository secret with a name of `CODECLIMATE_TEST_REPORTER_ID` and a value matching the CodeClimate "Test Reporter ID".
+
+Once you've completed those steps you can now create a workflow like the following which runs this action on a specific Drupal-PHP-PostgreSQL version (this should be the best supported version). This workflow uses the github secret as an arguement to this Github Action so that the generated clover.xml can be pushed to CodeClimate.
+
+You can confirm the workflow has worked by going to the CodeClimate Quality page for your repo (i.e. https://codeclimate.com/github/[organization]/[repo]). On the Repo Settings > Test Coverage page near the bottom there is a Recent Reports section and you should see a report appearing here when the workflow completes successfully.
+
+```yml
+name: Test Code Coverage (CodeClimate)
+on: [push]
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Run Automated testing + report coverage
+        uses: tripal/test-tripal-action@v1.6
+        with:
+          directory-name: my_tripal_extension
+          modules: my_tripal_extension
+          php-version: 8.3
+          pgsql-version: 16
+          drupal-version: 10.4.x-dev
+          codeclimate-reporter-id: ${{ secrets.CODECLIMATE_TEST_REPORTER_ID }}
 ```
 
 ## Inputs
@@ -81,9 +109,12 @@ A string to be appended to the end of the PHPUnit command. See the following exa
 - `--testsuite MyCustomTestSuite`: only run tests in a specific Test suite as configured in your phpunit.xml.
 - `--group MyGroupName`: runs tests with the "@group MyGroupName" added to their docblock headers.
 - `--filter testMySpecificMethod`: runs the testMySpecificMethod method specifically. This option can also be used to more generally filter your tests using regular expressions.
-- `--coverage-clover /var/www/drupal/web/modules/mydir/clover.xml`: to run code coverage with the output format matching that for CodeClimate and place the file in a specific directory.
 
 For a full listing of options for the PHPUnit [see the docs](https://docs.phpunit.de/en/9.6/textui.html).
+
+### `codeclimate-reporter-id`
+
+Provides the codeclimate reporter ID to report any code coverage to. You can find this ID by registering your repo for code climate and then going to Repo Settings > Test Coverage and copying the "Test Reporter ID". This ID should then be saved as a secret in your repository on Github by going to Settings > Secrets and Variables > Actions on your repos github page and adding a repository secret (e.g. `CODECLIMATE_TEST_REPORTER_ID`) where the value is the CodeClimate "Test Reporter ID". See the Test coverage example for more details on how to use this in your workflow.
 
 ### `build-image`
 
