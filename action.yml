@@ -24,8 +24,8 @@ inputs:
     description: "A string providing any options you would like added to the phpunit command."
     required: false
     default: ' '
-  codeclimate-reporter-id:
-    description: the reporter ID for codeclimate to publish results to. This should be saved as a secret in your reporsitory.
+  qltycloud-reporter-id:
+    description: the reporter ID for QLTY Cloud to publish results to. This should be saved as a secret in your reporsitory.
     required: false
   build-image:
     description: "Indicates whether you would like to build the docker based on your code (true) or pull an existing image (false)."
@@ -70,59 +70,31 @@ runs:
         shell: bash
         run: |
           docker exec tripaldocker drush en ${{ inputs.modules }} --yes
-      # If we have codeclimate enabled, then prepare for it here.
-      - name: Prepare for Codeclimate coverage reporting
-        if: "${{ inputs.codeclimate-reporter-id != '' }}"
-        shell: bash
-        env:
-          ABSOLUTE_MODULE_PATH: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}"
-        run: |
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          docker cp cc-test-reporter tripaldocker:$ABSOLUTE_MODULE_PATH
-          docker exec tripaldocker chmod a+x $ABSOLUTE_MODULE_PATH/cc-test-reporter
-          docker exec --workdir=$ABSOLUTE_MODULE_PATH tripaldocker ./cc-test-reporter before-build --debug
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
-        if: "${{ inputs.codeclimate-reporter-id == '' }}"
+        if: "${{ inputs.qltycloud-reporter-id == '' }}"
         shell: bash
-        env:
-          SIMPLETEST_BASE_URL: "http://localhost"
-          SIMPLETEST_DB: "pgsql://drupaladmin:drupaldevelopmentonlylocal@localhost/sitedb"
-          BROWSER_OUTPUT_DIRECTORY: "/var/www/drupal/web/sites/default/files/simpletest"
         run: |
-          docker exec -e SIMPLETEST_BASE_URL=$SIMPLETEST_BASE_URL \
-            -e SIMPLETEST_DB=$SIMPLETEST_DB \
-            -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
+          docker exec \
             --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit ${{ inputs.phpunit-command-options }}
       # Runs the PHPUnit tests WITH coverage.
-      - name: Run PHPUnit Tests with coverage for CodeClimate
-        if: "${{ inputs.codeclimate-reporter-id != '' }}"
+      - name: Run PHPUnit Tests with coverage for QLTY Cloud
+        if: "${{ inputs.qltycloud-reporter-id != '' }}"
         shell: bash
         env:
-          SIMPLETEST_BASE_URL: "http://localhost"
-          SIMPLETEST_DB: "pgsql://drupaladmin:drupaldevelopmentonlylocal@localhost/sitedb"
-          BROWSER_OUTPUT_DIRECTORY: "/var/www/drupal/web/sites/default/files/simpletest"
-          CODECLIMATE_REPORT: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml"
+          COVERAGE_REPORT: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml"
         run: |
-          docker exec -e SIMPLETEST_BASE_URL=$SIMPLETEST_BASE_URL \
-            -e SIMPLETEST_DB=$SIMPLETEST_DB \
-            -e BROWSER_OUTPUT_DIRECTORY=$BROWSER_OUTPUT_DIRECTORY \
+          docker exec \
             --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit ${{ inputs.phpunit-command-options }} \
-            --coverage-text --coverage-clover $CODECLIMATE_REPORT
+            --coverage-text --coverage-clover $COVERAGE_REPORT
           docker exec tripaldocker ls /var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}
-      # Publish to codeclimate
-      - name: Publish code coverage to Code Climate
-        if: "${{ inputs.codeclimate-reporter-id != '' }}"
-        shell: bash
-        env:
-          CODECLIMATE_REPORT: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml"
-          ABSOLUTE_MODULE_PATH: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}"
-        run: |
-          docker exec --workdir=$ABSOLUTE_MODULE_PATH tripaldocker \
-            git config --global --add safe.directory $ABSOLUTE_MODULE_PATH
-          docker exec --workdir=$ABSOLUTE_MODULE_PATH \
-            tripaldocker ./cc-test-reporter after-build clover.xml \
-            --id ${{ inputs.codeclimate-reporter-id }} \
-            --debug -t clover -p $ABSOLUTE_MODULE_PATH
+      # Publish to QLTY Cloud
+      - name: Publish code coverage to QLTY Cloud
+        if: "${{ inputs.qltycloud-reporter-id != '' }}"
+        uses: 'qltysh/qlty-action/coverage@v1'
+        with:
+          token: '${{ secrets.QLTY_COVERAGE_TOKEN }}'
+          files: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml"
+          strip-prefix: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}"

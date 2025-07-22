@@ -48,8 +48,8 @@ jobs:
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
           dockerfile: "Dockerfile"
-  test_codeclimate:
-    name: "Run providing inputs needed for codeclimate coverage reporting"
+  test_qltycloud:
+    name: "Run providing inputs needed for qltycloud coverage reporting"
     runs-on: ubuntu-latest
     steps:
       # To use this repository's private action,
@@ -70,8 +70,8 @@ jobs:
           modules: tripal
           php-version: "8.3"
           pgsql-version: "16"
-          drupal-version: "10.4.x-dev"
+          drupal-version: "11.2.x-dev"
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
           dockerfile: "Dockerfile"
-          codeclimate-reporter-id: ${{ secrets.CODECLIMATE_TEST_REPORTER_ID }}
+          qltycloud-reporter-id: ${{ secrets.QLTY_COVERAGE_TOKEN }}
