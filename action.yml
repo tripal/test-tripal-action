@@ -95,6 +95,6 @@ runs:
         if: "${{ inputs.qltycloud-reporter-id != '' }}"
         uses: 'qltysh/qlty-action/coverage@v1'
         with:
-          token: '${{ secrets.QLTY_COVERAGE_TOKEN }}'
+          token: '${{ inputs.qltycloud-reporter-id }}'
           files: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml"
           strip-prefix: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}"
