@@ -89,12 +89,12 @@ runs:
             --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit ${{ inputs.phpunit-command-options }} \
             --coverage-text --coverage-clover $COVERAGE_REPORT
-          docker exec tripaldocker ls /var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}
+          ls
       # Publish to QLTY Cloud
       - name: Publish code coverage to QLTY Cloud
         if: "${{ inputs.qltycloud-reporter-id != '' }}"
         uses: 'qltysh/qlty-action/coverage@v1'
         with:
           token: '${{ inputs.qltycloud-reporter-id }}'
-          files: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml"
+          files: "clover.xml"
           strip-prefix: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}"
