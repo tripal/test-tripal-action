@@ -17,9 +17,9 @@ inputs:
     required: false
     default: '16'
   drupal-version:
-    description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.2.x-dev)."
+    description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.1.x-dev)."
     required: false
-    default: '11.2.x-dev'
+    default: '11.1.x-dev'
   phpunit-command-options:
     description: "A string providing any options you would like added to the phpunit command."
     required: false

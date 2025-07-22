@@ -95,9 +95,9 @@ The version of PostgreSQL you would like your tests run against. This must match
 
 ### `drupal-version`
 
-The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.2.x-dev).
+The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.1.x-dev).
 
-**Default Value:** 11.2.x-dev
+**Default Value:** 11.1.x-dev
 
 ### `phpunit-command-options`
 
