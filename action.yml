@@ -9,23 +9,23 @@ inputs:
     description: "A space-separated list of module machine names indicating which modules to install before running tests."
     required: true
   php-version:
-    description: "The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.0 and 8.1)."
+    description: "The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.3)."
     required: false
     default: '8.3'
   pgsql-version:
-    description: "The version of PostgreSQL you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 13)."
+    description: "The version of PostgreSQL you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 13, 16)."
     required: false
     default: '16'
   drupal-version:
-    description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 9.4.x-dev, 9.5.x-dev)."
+    description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.2.x-dev)."
     required: false
-    default: '10.4.x-dev'
+    default: '11.2.x-dev'
   phpunit-command-options:
     description: "A string providing any options you would like added to the phpunit command."
     required: false
     default: ' '
   qltycloud-reporter-id:
-    description: the reporter ID for QLTY Cloud to publish results to. This should be saved as a secret in your reporsitory.
+    description: the reporter ID for QLTY Cloud to publish results to. This should be saved as a secret in your repository.
     required: false
   build-image:
     description: "Indicates whether you would like to build the docker based on your code (true) or pull an existing image (false)."
