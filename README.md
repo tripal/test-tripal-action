@@ -19,21 +19,18 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "8.1"
-          - "8.2"
           - "8.3"
         pgsql-version:
-          - "13"
           - "16"
         drupal-version:
-          - "10.2.x-dev"
-          - "10.3.x-dev"
-          - "10.4.x-dev"
+          - "11.0.x-dev"
+          - "11.1.x-dev"
+          - "11.2.x-dev"
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Automated testing
-        uses: tripal/test-tripal-action@v1.6
+        uses: tripal/test-tripal-action@v1.7
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
@@ -42,20 +39,20 @@ jobs:
           drupal-version: ${{ matrix.drupal-version }}
 ```
 
-### CodeClimate Test Coverage
+### QLTY Cloud Test Coverage
 
-The following example assumes you have setup PHPUnit to support test coverage reporting and registered your repo with CodeClimate Quality.
+The following example assumes you have setup PHPUnit to support test coverage reporting and registered your repo with QLTY Cloud.
 
-Once that is complete, you can find the CodeClimate "Test Reporter ID" by going to Repo Settings > Test Coverage and copying the "Test Reporter ID" on the CodeClimate Quality page for your repo (i.e. https://codeclimate.com/github/[organization]/[repo]).
+Once that is complete, you can find the QLTY Cloud "Coverage Token" by going to Project Settings > Code Coverage and copying the "Coverage Token" on the QLTY Cloud page for your repo (i.e. https://qlty.sh/gh/[organization]/projects/[repo]).
 
-This CodeClimate "Test Reporter ID" should then be saved as a secret in your repository on Github by going to Settings > Secrets and Variables > Actions on your repos github page (i.e. https://github.com/[organization]/[repo]/settings/secrets/actions) and adding a repository secret with a name of `CODECLIMATE_TEST_REPORTER_ID` and a value matching the CodeClimate "Test Reporter ID".
+This QLTY Cloud "Coverage Token" should then be saved as a secret in your repository on Github by going to Settings > Secrets and Variables > Actions on your repos github page (i.e. https://github.com/[organization]/[repo]/settings/secrets/actions) and adding a repository secret with a name of `QLTY_COVERAGE_TOKEN` and a value matching the QLTY Cloud "Coverage Token".
 
-Once you've completed those steps you can now create a workflow like the following which runs this action on a specific Drupal-PHP-PostgreSQL version (this should be the best supported version). This workflow uses the github secret as an arguement to this Github Action so that the generated clover.xml can be pushed to CodeClimate.
+Once you've completed those steps you can now create a workflow like the following which runs this action on a specific Drupal-PHP-PostgreSQL version (this should be the best supported version). This workflow uses the github secret as an arguement to this Github Action so that the generated clover.xml can be pushed to QLTY Cloud.
 
-You can confirm the workflow has worked by going to the CodeClimate Quality page for your repo (i.e. https://codeclimate.com/github/[organization]/[repo]). On the Repo Settings > Test Coverage page near the bottom there is a Recent Reports section and you should see a report appearing here when the workflow completes successfully.
+You can confirm the workflow has worked by going to the QLTY Cloud page for your repo (i.e. https://qlty.sh/gh/[organization]/projects/[repo]). On the Project Settings > Code Coverage page near the bottom there is a section listing recent results and you should see a report appearing here when the workflow completes successfully on the main branch of your repo.
 
 ```yml
-name: Test Code Coverage (CodeClimate)
+name: Test Code Coverage (QLTY Cloud)
 on: [push]
 jobs:
   run-tests:
@@ -64,14 +61,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Automated testing + report coverage
-        uses: tripal/test-tripal-action@v1.6
+        uses: tripal/test-tripal-action@v1.7
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
           php-version: 8.3
           pgsql-version: 16
-          drupal-version: 10.4.x-dev
-          codeclimate-reporter-id: ${{ secrets.CODECLIMATE_TEST_REPORTER_ID }}
+          drupal-version: 11.2.x-dev
+          qltycloud-reporter-id: ${{ secrets.QLTY_COVERAGE_TOKEN }}
 ```
 
 ## Inputs
@@ -92,15 +89,15 @@ jobs:
 
 ### `pgsql-version`
 
-The version of PostgreSQL you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 13).
+The version of PostgreSQL you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 13, 16).
 
-**Default Value:** 13
+**Default Value:** 16
 
 ### `drupal-version`
 
-The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 10.0.x-dev, 10.1.x-dev, 10.2.x-dev).
+The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.1.x-dev).
 
-**Default Value:** 10.2.x-dev
+**Default Value:** 11.1.x-dev
 
 ### `phpunit-command-options`
 
@@ -112,9 +109,9 @@ A string to be appended to the end of the PHPUnit command. See the following exa
 
 For a full listing of options for the PHPUnit [see the docs](https://docs.phpunit.de/en/9.6/textui.html).
 
-### `codeclimate-reporter-id`
+### `qltycloud-reporter-id`
 
-Provides the codeclimate reporter ID to report any code coverage to. You can find this ID by registering your repo for code climate and then going to Repo Settings > Test Coverage and copying the "Test Reporter ID". This ID should then be saved as a secret in your repository on Github by going to Settings > Secrets and Variables > Actions on your repos github page and adding a repository secret (e.g. `CODECLIMATE_TEST_REPORTER_ID`) where the value is the CodeClimate "Test Reporter ID". See the Test coverage example for more details on how to use this in your workflow.
+Provides the QLTY Cloud "Coverage Token" to report any code coverage to. You can find this token by registering your repo for QLTY Cloud and then going to Project Settings > Code Coverage and copying the "Coverage Token". This token should then be saved as a secret in your repository on Github by going to Settings > Secrets and Variables > Actions on your repos github page and adding a repository secret (e.g. `QLTY_COVERAGE_TOKEN`) where the value is the QLTY Cloud "Coverage Token". See the Test coverage example for more details on how to use this in your workflow.
 
 ### `build-image`
 
