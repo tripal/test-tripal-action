@@ -95,7 +95,7 @@ runs:
               fi
           fi
           echo "Using phpunit config file: $config_file"
-          echo "configfile=$(echo $config_file")" >> $GITHUB_OUTPUT
+          echo "configfile=$(echo $config_file)" >> $GITHUB_OUTPUT
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
         if: "${{ inputs.qltycloud-reporter-id == '' }}"
