@@ -89,18 +89,18 @@ runs:
           major_version=$(echo "$version_str" | sed -E 's/^PHPUnit ([0-9]+).*/\1/')
           minor_version=$(echo "$version_str" | sed -E 's/^PHPUnit [0-9]+\.([0-9]+).*/\1/')
           # Check for phpunit.MAJOR.MINOR.xml (e.g. phpunit.9.6.xml)
-          versioned_file="phpunit.${major_version}.{minor_version}.xml"
+          versioned_file="phpunit.${major_version}.${minor_version}.xml"
           if [ -f "$versioned_file" ]; then
               configfile="$versioned_file"
           else
             echo "Option 1: $versioned_file --doesn't exist."
-          fi
-          # Check for phpunit.MAJOR.xml (e.g. phpunit.10.xml)
-          versioned_file="phpunit.${major_version}.xml"
-          if [ -f "$versioned_file" ]; then
-              configfile="$versioned_file"
-          else
-            echo "Option 2: $versioned_file --doesn't exist."
+            # Check for phpunit.MAJOR.xml (e.g. phpunit.10.xml)
+            versioned_file="phpunit.${major_version}.xml"
+            if [ -f "$versioned_file" ]; then
+                configfile="$versioned_file"
+            else
+              echo "Option 2: $versioned_file --doesn't exist."
+            fi
           fi
           echo "Using phpunit config file: $configfile"
           echo "configfile=$(echo $configfile)" >> $GITHUB_OUTPUT
