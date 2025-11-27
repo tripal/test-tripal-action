@@ -84,15 +84,23 @@ runs:
         shell: bash
         run: |
           configfile='phpunit.xml'
+          echo "Default: $configfile"
           version_str=$(docker exec --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} tripaldocker phpunit --version)
           major_version=$(echo "$version_str" | sed -E 's/^PHPUnit ([0-9]+).*/\1/')
-          if [ -n "$major_version" ]; then
-              versioned_file="phpunit.${major_version}.xml"
-              if [ -f "$versioned_file" ]; then
-                  configfile="$versioned_file"
-              else
-                echo "We checked for $versioned_file but it didn't exist."
-              fi
+          minor_version=$(echo "$version_str" | sed -E 's/^PHPUnit [0-9]+\.([0-9]+).*/\1/')
+          # Check for phpunit.MAJOR.MINOR.xml (e.g. phpunit.9.6.xml)
+          versioned_file="phpunit.${major_version}.{minor_version}.xml"
+          if [ -f "$versioned_file" ]; then
+              configfile="$versioned_file"
+          else
+            echo "Option 1: $versioned_file --doesn't exist."
+          fi
+          # Check for phpunit.MAJOR.xml (e.g. phpunit.10.xml)
+          versioned_file="phpunit.${major_version}.xml"
+          if [ -f "$versioned_file" ]; then
+              configfile="$versioned_file"
+          else
+            echo "Option 2: $versioned_file --doesn't exist."
           fi
           echo "Using phpunit config file: $configfile"
           echo "configfile=$(echo $configfile)" >> $GITHUB_OUTPUT
