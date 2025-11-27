@@ -38,10 +38,10 @@ inputs:
     description: "The relative path and file name for the dockerfile to use with build-image."
     required: true
     default: 'Dockerfile'
-outputs:
-  config_file:
-    description: 'The filename of the phpunit.xml configuration file to use.'
-    value: ${{ steps.detect-phpunit-config.outputs.config_file }}
+# outputs:
+#   config_file:
+#     description: 'The filename of the phpunit.xml configuration file to use.'
+#     value: ${{ steps.detect-phpunit-config.outputs.config_file }}
 runs:
   using: "composite"
   steps:
@@ -95,7 +95,6 @@ runs:
               fi
           fi
           echo "Using phpunit config file: $config_file"
-          echo "config_file=$config_file" >> $GITHUB_OUTPUT
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
         if: "${{ inputs.qltycloud-reporter-id == '' }}"
