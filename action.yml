@@ -85,7 +85,7 @@ runs:
         run: |
           config_file='phpunit.xml'
           version_str='PHPUnit 9.6.29 by Sebastian Bergmann and contributors.'
-          major_version=$(echo "$version_str" | sed -E 's/^PHPUnit ([0-9]+).*/\1/')
+          major_version='9'
           if [ -n "$major_version" ]; then
               versioned_file="phpunit.${major_version}.xml"
               if [ -f "$versioned_file" ]; then
