@@ -101,11 +101,9 @@ runs:
         if: "${{ inputs.qltycloud-reporter-id == '' }}"
         shell: bash
         run: |
-          docker exec --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} tripaldocker phpunit --version
-          echo "Previously we detected that we should use '${{ steps.detect-phpunit-config.outputs.configfile }}'."
           docker exec \
             --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
-            tripaldocker phpunit ${{ inputs.phpunit-command-options }}
+            tripaldocker phpunit --configuration ${{ steps.detect-phpunit-config.outputs.configfile }} ${{ inputs.phpunit-command-options }}
       # Runs the PHPUnit tests WITH coverage.
       - name: Run PHPUnit Tests with coverage for QLTY Cloud
         if: "${{ inputs.qltycloud-reporter-id != '' }}"
@@ -116,6 +114,7 @@ runs:
           docker exec \
             --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit ${{ inputs.phpunit-command-options }} \
+            --configuration ${{ steps.detect-phpunit-config.outputs.configfile }} \
             --coverage-text --coverage-clover $COVERAGE_REPORT
           ls
       # Publish to QLTY Cloud
