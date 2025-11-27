@@ -91,18 +91,20 @@ runs:
           # Check for phpunit.MAJOR.MINOR.xml (e.g. phpunit.9.6.xml)
           versioned_file="phpunit.${major_version}.${minor_version}.xml"
           if [ -f "$versioned_file" ]; then
-              configfile="$versioned_file"
+            echo "Option 1: $versioned_file --found!"
+            configfile="$versioned_file"
           else
             echo "Option 1: $versioned_file --doesn't exist."
             # Check for phpunit.MAJOR.xml (e.g. phpunit.10.xml)
             versioned_file="phpunit.${major_version}.xml"
             if [ -f "$versioned_file" ]; then
+              echo "Option 2: $versioned_file --found!"
                 configfile="$versioned_file"
             else
               echo "Option 2: $versioned_file --doesn't exist."
             fi
           fi
-          echo "Using phpunit config file: $configfile"
+          echo "\nUsing phpunit config file: $configfile"
           echo "configfile=$(echo $configfile)" >> $GITHUB_OUTPUT
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
