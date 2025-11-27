@@ -86,7 +86,6 @@ runs:
           config_file='phpunit.xml'
           version_str='PHPUnit 9.6.29 by Sebastian Bergmann and contributors.'
           major_version='9'
-          echo "Using phpunit config file: $config_file"
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
         if: "${{ inputs.qltycloud-reporter-id == '' }}"
