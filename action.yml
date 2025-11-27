@@ -20,6 +20,9 @@ inputs:
     description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.1.x-dev)."
     required: false
     default: '11.1.x-dev'
+  phpunit-config:
+   description: "The phpunit.xml file to configure the tests. If left blank, we will try to locate it using the following patters: (1) phpunit.VER.xml (where VER is 9 for drupal 10.4/5; 10 for drupal 11.1; 11 for drupal 11.2+), (2) phpunit.xml"
+   required: false
   phpunit-command-options:
     description: "A string providing any options you would like added to the phpunit command."
     required: false
@@ -70,11 +73,32 @@ runs:
         shell: bash
         run: |
           docker exec tripaldocker drush en ${{ inputs.modules }} --yes
+      # Detect the PHPUnit config based on Drupal version.
+      - id: 'detect-phpunit-config'
+        name: "Detect version of phpunit"
+        if: "${{ inputs.phpunit-config == '' }}"
+        shell: bash
+        run: |
+          config_file='phpunit.xml'
+          version_str=$(docker exec --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} tripaldocker phpunit --version)
+          major_version=$(echo "$version_str" | grep -oP '(?<=PHPUnit )\d+')
+          if [ -n "$major_version" ]; then
+              versioned_file="phpunit.${major_version}.xml"
+              if [ -f "$versioned_file" ]; then
+                  config_file="$versioned_file"
+              else
+                echo "We checked for $versioned_file but it didn't exist."
+              fi
+          fi
+          echo "Using phpunit config file: $config_file"
+          echo "config_file=$config_file" >> $GITHUB_OUTPUT
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
         if: "${{ inputs.qltycloud-reporter-id == '' }}"
         shell: bash
         run: |
+          docker exec --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} tripaldocker phpunit --version
+          echo "Previously we detected that we should use ${{ steps.detect-phpunit-config.outputs.config_value }}"
           docker exec \
             --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
             tripaldocker phpunit ${{ inputs.phpunit-command-options }}
