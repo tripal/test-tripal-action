@@ -86,14 +86,6 @@ runs:
           config_file='phpunit.xml'
           version_str='PHPUnit 9.6.29 by Sebastian Bergmann and contributors.'
           major_version='9'
-          if [ -n "$major_version" ]; then
-              versioned_file="phpunit.${major_version}.xml"
-              if [ -f "$versioned_file" ]; then
-                  config_file="$versioned_file"
-              else
-                echo "We checked for $versioned_file but it didn't exist."
-              fi
-          fi
           echo "Using phpunit config file: $config_file"
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
