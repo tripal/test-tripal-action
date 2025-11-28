@@ -28,7 +28,7 @@ jobs:
           - '10.5.x-dev'
           - '11.1.x-dev'
           - '11.x-dev'
-        excludes:
+        exclude:
           # Only Drupal 11.x supports PHP 8.4
           - php-version: '8.4'
             drupal-version: '10.5.x-dev'
