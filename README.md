@@ -2,7 +2,6 @@
 
 This repo provides a Github Action to make automated testing workflows for Tripal Extension modules easy! It will spin up a specialized docker container, install your module with it's dependencies.
 
-
 ## Example usage
 
 The following examples for a module named `my_tripal_extension` uses this action in a matrix to automate testing across multiple php and drupal versions.
