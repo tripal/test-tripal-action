@@ -1,17 +1,27 @@
-on: [push]
+name: 'Single Version Combo'
+
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   test_all_defaults:
-    name: "Tripal Core: Only Required Options"
+    name: "Only Required Options"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo:
+        - tripal/tripal
+        - TripalCultivate/TripalCultivate
     steps:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Clone Tripal for testing purposes
+      - name: Clone Repo for testing purposes
         run: |
-          git clone https://github.com/tripal/tripal.git tmp
+          git clone https://github.com/${{ matrix.repo }}.git tmp
           cd tmp
           git checkout 4.x
           mv * ../
@@ -21,10 +31,15 @@ jobs:
         with:
           directory-name: tripal
           modules: tripal
-          phpunit-command-options: '--filter testTripalAdminPages'
   test_all_provided:
-    name: "Tripal Core: Specify versions + build docker"
+    name: "Specify versions + build docker"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo:
+        - tripal/tripal
+        - TripalCultivate/TripalCultivate
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -32,7 +47,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Clone Tripal for testing purposes
         run: |
-          git clone https://github.com/tripal/tripal.git tmp
+          git clone https://github.com/${{ matrix.repo }}.git tmp
           cd tmp
           git checkout 4.x
           mv * ../
@@ -45,12 +60,17 @@ jobs:
           php-version: "8.4"
           pgsql-version: "18"
           drupal-version: "11.2.x-dev"
-          phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
           dockerfile: "Dockerfile"
   test_qltycloud:
-    name: "Tripal Core: QltyCloud coverage reporting"
+    name: "QltyCloud coverage reporting"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo:
+        - tripal/tripal
+        - TripalCultivate/TripalCultivate
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -58,7 +78,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Clone Tripal for testing purposes
         run: |
-          git clone https://github.com/tripal/tripal.git tmp
+          git clone https://github.com/${{ matrix.repo }}.git tmp
           cd tmp
           git checkout 4.x
           mv * ../
@@ -68,5 +88,4 @@ jobs:
         with:
           directory-name: tripal
           modules: tripal
-          phpunit-command-options: '--filter testTripalAdminPages'
           qltycloud-reporter-id: ${{ secrets.QLTY_COVERAGE_TOKEN }}
