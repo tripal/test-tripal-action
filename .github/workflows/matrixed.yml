@@ -6,7 +6,7 @@ on:
 
 jobs:
   test_all_provided:
-    name: "Specify versions + build docker"
+    name: "Basic"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -54,8 +54,8 @@ jobs:
         with:
           directory-name: ${{ matrix.repo.directory }}
           phpunit-command-options: "--filter ${{ matrix.repo.filter }}"
-          php-version: "8.4"
-          pgsql-version: "18"
-          drupal-version: "11.2.x-dev"
+          php-version: ${{ matrix.php-version }}
+          pgsql-version: ${{ matrix.pgsql-version }}
+          drupal-version: ${{ matrix.drupal-version }}
           build-image: true
           dockerfile: "Dockerfile"
