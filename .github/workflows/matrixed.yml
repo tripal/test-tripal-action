@@ -1,0 +1,61 @@
+name: 'Matrixed'
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test_all_provided:
+    name: "Specify versions + build docker"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo:
+        - id: tripal/tripal
+          directory: tripal
+          filter: testTripalAdminPages
+        - id: TripalCultivate/TripalCultivate
+          directory: TripalCultivate
+          filter: testPreprocessPage
+        php-version:
+          - '8.2'
+          - '8.3'
+          - '8.4'
+        pgsql-version:
+          - '18'
+        drupal-version:
+          - '10.5.x-dev'
+          - '11.1.x-dev'
+          - '11.x-dev'
+        excludes:
+          # Only Drupal 11.x supports PHP 8.4
+          - php-version: '8.4'
+            drupal-version: '10.5.x-dev'
+          # Drupal 11+ requires at least php 8.3.
+          - php-version: '8.2'
+            drupal-version: '11.1.x-dev'
+          - php-version: '8.2'
+            drupal-version: '11.x-dev'
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Clone Tripal for testing purposes
+        run: |
+          git clone https://github.com/${{ matrix.repo.id }}.git tmp
+          cd tmp
+          git checkout 4.x
+          mv * ../
+          ls ../
+      - name: Run the action step
+        uses: ./ # Uses an action in the root directory
+        with:
+          directory-name: ${{ matrix.repo.directory }}
+          phpunit-command-options: "--filter ${{ matrix.repo.filter }}"
+          php-version: "8.4"
+          pgsql-version: "18"
+          drupal-version: "11.2.x-dev"
+          build-image: true
+          dockerfile: "Dockerfile"
