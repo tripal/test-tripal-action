@@ -111,10 +111,11 @@ runs:
         if: "${{ inputs.qltycloud-reporter-id == '' }}"
         shell: bash
         run: |
-          docker exec --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} tripaldocker ls
-          docker exec \
-            --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
-            tripaldocker phpunit --configuration ${{ steps.detect-phpunit-config.outputs.configfile }} ${{ inputs.phpunit-command-options }}
+          directory="/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}"
+          docker exec tripaldocker service postgresql restart
+          docker exec --workdir="$directory" tripaldocker phpunit \
+            --configuration "$directory/${{ steps.detect-phpunit-config.outputs.configfile }}" \
+            ${{ inputs.phpunit-command-options }}
       # Runs the PHPUnit tests WITH coverage.
       - name: Run PHPUnit Tests with coverage for QLTY Cloud
         if: "${{ inputs.qltycloud-reporter-id != '' }}"
@@ -122,10 +123,10 @@ runs:
         env:
           COVERAGE_REPORT: "/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml"
         run: |
-          docker exec \
-            --workdir=/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }} \
-            tripaldocker phpunit \
-            --configuration ${{ steps.detect-phpunit-config.outputs.configfile }} \
+          directory="/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}"
+          docker exec tripaldocker service postgresql restart
+          docker exec --workdir="$directory" tripaldocker phpunit \
+            --configuration "$directory/${{ steps.detect-phpunit-config.outputs.configfile }}" \
             ${{ inputs.phpunit-command-options }} \
             --coverage-text --coverage-clover $COVERAGE_REPORT
           ls
