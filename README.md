@@ -80,7 +80,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Automated testing + report coverage
-        uses: tripal/test-tripal-action@v1.7
+        uses: tripal/test-tripal-action@v1.8
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
