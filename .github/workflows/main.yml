@@ -42,9 +42,9 @@ jobs:
         with:
           directory-name: tripal
           modules: tripal
-          php-version: "8.3"
+          php-version: "8.4"
           pgsql-version: "18"
-          drupal-version: "10.5.x-dev"
+          drupal-version: "11.x-dev"
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
           dockerfile: "Dockerfile"
@@ -68,9 +68,9 @@ jobs:
         with:
           directory-name: tripal
           modules: tripal
-          php-version: "8.3"
-          pgsql-version: "16"
-          drupal-version: "11.1.x-dev"
+          php-version: "8.4"
+          pgsql-version: "18"
+          drupal-version: "11.x-dev"
           phpunit-command-options: '--filter testTripalAdminPages'
           build-image: true
           dockerfile: "Dockerfile"
