@@ -17,9 +17,9 @@ inputs:
     required: false
     default: '18'
   drupal-version:
-    description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.x-dev)."
+    description: "The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.2.x-dev)."
     required: false
-    default: '11.x-dev'
+    default: '11.2.x-dev'
   phpunit-config:
    description: "The phpunit.xml file to configure the tests. If left blank, we will try to locate it using the following patters: (1) phpunit.VER.xml (where VER is 9 for drupal 10.4/5; 10 for drupal 11.1; 11 for drupal 11.2+), (2) phpunit.xml"
    required: false
