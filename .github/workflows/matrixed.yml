@@ -15,9 +15,9 @@ jobs:
         - id: tripal/tripal
           directory: tripal
           filter: testTripalAdminPages
-#        - id: TripalCultivate/TripalCultivate
-#          directory: TripalCultivate
-#          filter: testPreprocessPage
+        - id: TripalCultivate/TripalCultivate
+          directory: TripalCultivate
+          filter: testPreprocessPage
         php-version:
           - '8.2'
           - '8.3'
