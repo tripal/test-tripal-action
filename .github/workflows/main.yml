@@ -29,6 +29,7 @@ jobs:
           cd tmp
           git checkout 4.x
           mv * ../
+          mv .tripal-deprecation-ignore.txt ../
           ls -a ../
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
@@ -60,7 +61,8 @@ jobs:
           cd tmp
           git checkout 4.x
           mv * ../
-          ls ../
+          mv .tripal-deprecation-ignore.txt ../
+          ls -a ../
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
         with:
@@ -95,7 +97,8 @@ jobs:
           cd tmp
           git checkout 4.x
           mv * ../
-          ls ../
+          mv .tripal-deprecation-ignore.txt ../
+          ls -a ../
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
         with:
