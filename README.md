@@ -38,18 +38,17 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "8.3"
+          - '8.5'
         pgsql-version:
-          - "16"
+          - '18'
         drupal-version:
-          - "11.0.x-dev"
-          - "11.1.x-dev"
-          - "11.2.x-dev"
+          - '11.3.x-dev'
+          - '11.4.x-dev'
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Run Automated testing
-        uses: tripal/test-tripal-action@v1.8
+        uses: tripal/test-tripal-action@v1.9
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
@@ -80,13 +79,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Automated testing + report coverage
-        uses: tripal/test-tripal-action@v1.8
+        uses: tripal/test-tripal-action@v1.9
         with:
           directory-name: my_tripal_extension
           modules: my_tripal_extension
-          php-version: 8.3
-          pgsql-version: 16
-          drupal-version: 11.2.x-dev
+          php-version: 8.5
+          pgsql-version: 18
+          drupal-version: 11.4.x-dev
           qltycloud-reporter-id: ${{ secrets.QLTY_COVERAGE_TOKEN }}
 ```
 
