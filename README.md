@@ -42,8 +42,8 @@ jobs:
         pgsql-version:
           - '18'
         drupal-version:
-          - '11.3.x-dev'
-          - '11.4.x-dev'
+          - '11.3.x'
+          - '11.4.x'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
@@ -85,7 +85,7 @@ jobs:
           modules: my_tripal_extension
           php-version: 8.5
           pgsql-version: 18
-          drupal-version: 11.4.x-dev
+          drupal-version: 11.4.x
           qltycloud-reporter-id: ${{ secrets.QLTY_COVERAGE_TOKEN }}
 ```
 
@@ -101,9 +101,9 @@ jobs:
 
 ### `php-version`
 
-**Optional** The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.1, 8.2, 8.3).
+**Optional** The version of PHP you would like tested. This must match one of the current PHP versions TripalDocker is available in (e.g. 8.3, 8.4, 8.5).
 
-**Default Value:** 8.3
+**Default Value:** 8.5
 
 ### `pgsql-version`
 
@@ -113,9 +113,9 @@ jobs:
 
 ### `drupal-version`
 
-**Optional** The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.1.x-dev).
+**Optional** The version of Drupal you would like your tests run against. This must match one of the current versions TripalDocker is available in (e.g. 11.4.x).
 
-**Default Value:** 11.1.x-dev
+**Default Value:** 11.4.x
 
 ### `phpunit-config`
 
