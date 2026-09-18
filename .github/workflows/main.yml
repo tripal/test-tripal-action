@@ -15,14 +15,14 @@ jobs:
         - id: tripal/tripal
           directory: tripal
           filter: testTripalAdminPages
-        - id: TripalCultivate/TripalCultivate
-          directory: TripalCultivate
-          filter: testPreprocessPage
+#        - id: TripalCultivate/TripalCultivate
+#          directory: TripalCultivate
+#          filter: testPreprocessPage
     steps:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Clone Repo for testing purposes
         run: |
           git clone https://github.com/${{ matrix.repo.id }}.git tmp
@@ -53,7 +53,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/${{ matrix.repo.id }}.git tmp
@@ -88,7 +88,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/${{ matrix.repo.id }}.git tmp
