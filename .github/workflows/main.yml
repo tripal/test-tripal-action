@@ -22,14 +22,15 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Clone Repo for testing purposes
         run: |
           git clone https://github.com/${{ matrix.repo.id }}.git tmp
           cd tmp
           git checkout 4.x
           mv * ../
-          ls ../
+          [ -f .tripal-deprecation-ignore.txt ] && mv .tripal-deprecation-ignore.txt ../
+          ls -a ../
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
         with:
@@ -53,22 +54,23 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/${{ matrix.repo.id }}.git tmp
           cd tmp
           git checkout 4.x
           mv * ../
-          ls ../
+          [ -f .tripal-deprecation-ignore.txt ] && mv .tripal-deprecation-ignore.txt ../
+          ls -a ../
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
         with:
           directory-name: ${{ matrix.repo.directory }}
           phpunit-command-options: "--filter ${{ matrix.repo.filter }}"
-          php-version: "8.4"
+          php-version: "8.5"
           pgsql-version: "18"
-          drupal-version: "11.2.x-dev"
+          drupal-version: "11.4.x"
           build-image: true
           dockerfile: "Dockerfile"
   test_qltycloud:
@@ -88,14 +90,15 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Clone Tripal for testing purposes
         run: |
           git clone https://github.com/${{ matrix.repo.id }}.git tmp
           cd tmp
           git checkout 4.x
           mv * ../
-          ls ../
+          [ -f .tripal-deprecation-ignore.txt ] && mv .tripal-deprecation-ignore.txt ../
+          ls -a ../
       - name: Run the action step
         uses: ./ # Uses an action in the root directory
         with:
