@@ -66,9 +66,9 @@ jobs:
         with:
           directory-name: ${{ matrix.repo.directory }}
           phpunit-command-options: "--filter ${{ matrix.repo.filter }}"
-          php-version: "8.4"
+          php-version: "8.5"
           pgsql-version: "18"
-          drupal-version: "11.2.x-dev"
+          drupal-version: "11.4.x-dev"
           build-image: true
           dockerfile: "Dockerfile"
   test_qltycloud:
