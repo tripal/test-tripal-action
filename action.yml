@@ -83,7 +83,7 @@ runs:
         if: "${{ inputs.phpunit-config == '' }}"
         shell: bash
         run: |
-          bash set_phpunit_config.sh
+          bash set_phpunit_config.sh "${{ inputs.drupal-version }}"
       # Runs the PHPUnit tests without coverage.
       - name: Run PHPUnit Tests
         if: "${{ inputs.qltycloud-reporter-id == '' }}"
