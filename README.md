@@ -6,7 +6,7 @@ This repo provides a Github Action to make automated testing workflows for Tripa
 
 - Runs phpunit in a docker of your choice (can either build or pull a version-specific image).
 - Automatically detects which configuration file to use for phpunit making it easier to support multiple versions.
-- Supports indicating drupal, php and postgreSQL versions which makes it great for use in a matrixed workflow!
+- Supports indicating drupal, php, and postgreSQL versions which makes it great for use in a matrixed workflow!
 - Integrates with QLTY Cloud so that you can simplify keeping track of code coverage.
 
 ## Steps / Functionality
@@ -18,7 +18,7 @@ The following describes the steps done by this GitHub action and how your suppli
   b. Otherwise it will build the image based on the dockerfile in the current module.
 2. Create a new docker container using the image from the first step and mount the current directory to `/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}` in the container.
 3. If you defined modules to install, this will be done now. If your docker image already installed the needed modules, then there is no need to indicate the modules.
-4. The version of phpunit will be checked in the docker container and the action will try to detect the correct PHPUnit XML configuration file to use. The following naming formats are supported: `phpunit.MAJOR.MINOR.xml`, `phpunit.MAJOR.xml`, `phpunit.xml` where MAJOR = 10 and MINOR = 5 for PHPUnit 10.5. You can supply the file to use via the `phpunit-config` option to override this.
+4. The version of phpunit will be checked in the docker container and the action will try to detect the correct PHPUnit XML configuration file to use. The following naming formats are supported: `phpunit_for_drupal_MAJOR.MINOR.xml`, `phpunit_for_drupal_MAJOR.xml`, `phpunit.xml` where MAJOR = 10 and MINOR = 6 for Drupal 10.6. You can supply the file to use via the `phpunit-config` option to override this.
 5. PHPUnit will be run inside the docker container in the `/var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}` directory. The configuration file will be set via `--configuration`. If you provided `qltycloud-reporter-id` then the `--coverage-text --coverage-clover /var/www/drupal/web/modules/contrib/${{ inputs.directory-name }}/clover.xml` options will be added to the phpunit command. You can add any additional options using `phpunit-command-options`
 6. If you provided `qltycloud-reporter-id` then the clover report will be submitted to QLTY Cloud on your behalf. See the "QLTY Cloud Test Coverage" section below for how to configure this.
 
