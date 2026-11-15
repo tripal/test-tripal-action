@@ -31,7 +31,6 @@ jobs:
           - '11.4.x'
           - '11.x-dev'
         exclude:
-        exclude:
           # Only Drupal 11.3+ supports PHP 8.5
           - php-version: '8.5'
             drupal-version: '10.6.x'
